@@ -282,7 +282,7 @@ use Exporter;
 use VCS::PVCS;
 use vars qw($VERSION %EXPORT_TAGS @EXPORT_OK @ISA);
 @ISA = qw(Exporter );
-$VERSION = "0.01";
+$VERSION = "0.02";
 
 @EXPORT_OK = ();  # populated by export_ok_tags
 %EXPORT_TAGS = (
@@ -823,7 +823,11 @@ if($PVCSSHOWMODE){
     warn "Would have executed:\n	$PVCS_BINDIR/$command -C$PVCSMASTERCFG -C$PVCSCURRPROJCFG $options\n";
 }
 else{
-    $output = `$PVCS_BINDIR/$command -C$PVCSMASTERCFG -C$PVCSCURRPROJCFG $options`;
+    if($^O eq "MSWin32"){
+	$output = `$PVCS_BINDIR\\$command -C$PVCSMASTERCFG -C$PVCSCURRPROJCFG $options`;
+    }else{
+	$output = `$PVCS_BINDIR/$command -C$PVCSMASTERCFG -C$PVCSCURRPROJCFG $options`;
+    }
     $error = $?;
 }
 if(! $PVCSSHOWMODE){
